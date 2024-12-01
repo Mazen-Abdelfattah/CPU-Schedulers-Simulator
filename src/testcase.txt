@@ -1,0 +1,7 @@
+4
+4
+1
+P1 Red 0 17 4
+P2 Blue 3 6 9
+P3 Yellow 4 10 2
+P4 Cyan 29 4 8

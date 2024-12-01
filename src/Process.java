@@ -1,24 +1,31 @@
 
 
 
-public class process {
+public class Process {
     private String name;
     private String color;
     private int arrivalTime;
     private int burstTime;
     private int priority;
     private int id;
-    public process() {
 
-    }
-    public process(String name, String color, int arrivalTime, int burstTime, int priority, int id) {
+    public Process(String name, String color, int arrivalTime, int burstTime, int priority) {
         this.name = name;
         this.color = color;
         this.arrivalTime = arrivalTime;
         this.burstTime = burstTime;
         this.priority = priority;
-        this.id = id;
+
     }
+
+    public Process(Process other) { // Copy constructor
+        this.name = other.name;
+        this.color = other.color;
+        this.arrivalTime = other.arrivalTime;
+        this.burstTime = other.burstTime;
+        this.priority = other.priority;
+    }
+
     public int getPriority() {
         return priority;
     }
