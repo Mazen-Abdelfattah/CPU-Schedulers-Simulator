@@ -31,6 +31,7 @@ public class Main {
             int priority = sc.nextInt();
             processes.add(new Process(name, color, arrivalTime, burstTime, priority));
         }
+
         SchedulingAlgorithm sjf = new ShortestJobFirst(processes, contextSwitchTime);
         System.out.println("Shortest Job First Scheduling Algorithm");
         sjf.getExecutionOrder();
@@ -40,7 +41,14 @@ public class Main {
         System.out.println("Average Turn Around Time : " + sjf.getAverageTurnAroundTime() + " ms");
         System.out.println("\n_________________________________________________________________\n");
 
-
+        SchedulingAlgorithm priorityScheduling = new PrioritySchedulingAlgorithm(processes, contextSwitchTime);
+        System.out.println("\nPriority Scheduling Algorithm");
+        priorityScheduling.getExecutionOrder();
+        priorityScheduling.getWaitingTime();
+        priorityScheduling.getTurnAroundTime();
+        System.out.println("Average Waiting Time : " + priorityScheduling.getAverageWaitingTime() + " ms");
+        System.out.println("Average Turn Around Time : " + priorityScheduling.getAverageTurnAroundTime() + " ms");
+        System.out.println("\n_________________________________________________________________\n");
 
     }
 }
