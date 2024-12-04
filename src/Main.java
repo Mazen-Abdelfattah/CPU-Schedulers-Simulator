@@ -50,5 +50,14 @@ public class Main {
         System.out.println("Average Turn Around Time : " + priorityScheduling.getAverageTurnAroundTime() + " ms");
         System.out.println("\n_________________________________________________________________\n");
 
+        SchedulingAlgorithm srtf = new ShortestRemainingTimeFirst(processes, contextSwitchTime);
+        System.out.println("\nShortest Remaining Time First Scheduling Algorithm");
+        srtf.getExecutionOrder();
+        srtf.getWaitingTime();
+        srtf.getTurnAroundTime();
+        System.out.println("Average Waiting Time : " + srtf.getAverageWaitingTime() + " ms");
+        System.out.println("Average Turn Around Time : " + srtf.getAverageTurnAroundTime() + " ms");
+        System.out.println("\n_________________________________________________________________\n");
+
     }
 }
