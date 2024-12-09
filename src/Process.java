@@ -1,45 +1,34 @@
-import java.util.ArrayList;
-import java.util.List;
 
-public class Process {
+
+
+public class Process implements Comparable<Process>{
     private String name;
     private String color;
     private int arrivalTime;
     private int burstTime;
     private int priority;
-    private int remainingBurstTime;  // Track the remaining burst time for the process
-    private int quantum;  // Track the quantum assigned to the process
-    private int completionTime;
-    private int turnaroundTime;
-    private int waitingTime;
-    private int fcaiFactor;
-    boolean isAddedToQueue = false;
+    private int id;
+    private int age = 0;
+    private int remainingTime ;
 
-    private List<Integer> quantumHistory = new ArrayList<>();  // Track quantum history
-
-    public Process(String name, String color, int arrivalTime, int burstTime, int priority, int quantum) {
+    public Process(String name, String color, int arrivalTime, int burstTime, int priority) {
         this.name = name;
         this.color = color;
         this.arrivalTime = arrivalTime;
         this.burstTime = burstTime;
-        this.remainingBurstTime = burstTime;  // Initialize remaining burst time
         this.priority = priority;
-        this.quantum = quantum;
+        this.remainingTime = burstTime;
     }
 
-    // Copy constructor
-    public Process(Process other) {
+    public Process(Process other) { // Copy constructor
         this.name = other.name;
         this.color = other.color;
         this.arrivalTime = other.arrivalTime;
         this.burstTime = other.burstTime;
-        this.remainingBurstTime = other.remainingBurstTime;
         this.priority = other.priority;
-        this.quantum = other.quantum;
-        this.quantumHistory = new ArrayList<>(other.quantumHistory);
+        this.remainingTime = other.remainingTime;
     }
 
-    // Getter and Setter methods
     public int getPriority() {
         return priority;
     }
@@ -80,65 +69,23 @@ public class Process {
         this.name = name;
     }
 
-    public int getQuantum() {
-        return quantum;
-    }
+    public int getAge(){return age;}
 
-    public int getRemainingBurstTime() {
-        return remainingBurstTime;
-    }
+    public void setAge(int age){this.age=age;}
 
-    public void setRemainingBurstTime(int remainingBurstTime) {
-        this.remainingBurstTime = remainingBurstTime;
-    }
+    public void setRemainingTime(int time){remainingTime=time;}
 
-    public void setQuantum(int quantum) {
-        this.quantum = quantum;
-    }
+    public int getRemainingTime(){return remainingTime;}
 
-    public int getCompletionTime() {
-        return completionTime;
-    }
+    @Override
+    public int compareTo(Process other) {
+        int remainingTimeComparison = Integer.compare(this.remainingTime, other.remainingTime);
 
-    public void setCompletionTime(int completionTime) {
-        this.completionTime = completionTime;
-    }
+        if (remainingTimeComparison != 0) {
+            return remainingTimeComparison;
+        }
 
-    public int getWaitingTime() {
-        return waitingTime;
-    }
-
-    public void setWaitingTime(int waitingTime) {
-        this.waitingTime = waitingTime;
-    }
-
-    public int getTurnaroundTime() {
-        return turnaroundTime;
-    }
-
-    public void setTurnaroundTime(int turnaroundTime) {
-        this.turnaroundTime = turnaroundTime;
-    }
-
-    // Add quantum time to the history
-    public void addQuantumToHistory(int quantum) {
-        this.quantumHistory.add(quantum);
-    }
-
-    public List<Integer> getQuantumHistory() {
-        return quantumHistory;
-    }
-
-    public boolean hasRemainingBurstTime() {
-        return getRemainingBurstTime() > 0;
-    }
-
-    public int getFcaiFactor() {
-        return fcaiFactor;
-    }
-
-    public void setFcaiFactor(int fcaiFactor) {
-        this.fcaiFactor = fcaiFactor;
+        // If remaining time is the same, break the tie by arrival time
+        return Integer.compare(this.arrivalTime, other.arrivalTime);
     }
 }
-//
