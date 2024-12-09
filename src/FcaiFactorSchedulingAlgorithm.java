@@ -54,7 +54,7 @@ public class FcaiFactorSchedulingAlgorithm implements SchedulingAlgorithm {
 
     @Override
     public void getExecutionOrder() {
-        int time = 0;
+        int time = 0; //The time of the whole Schedule
         boolean flagForFirstProcess = true;
         boolean flagForLastProcess = false;
 
@@ -71,14 +71,17 @@ public class FcaiFactorSchedulingAlgorithm implements SchedulingAlgorithm {
 
             checkNewProcesses(time);
             Process currentProcess = readyQueue.pollFirst();
-            int executedTime = 0;
-            int startTime = time;
-            int initialQuantum = currentProcess.getQuantum();
+
+            int executedTime = 0;//The time of the process that is being executing now
+            int startTime = time;//The time the process begin to execute in this Iteration
+
+            int initialQuantum = currentProcess.getQuantum();//We will need it while printing...
             int nonPreemptiveQuantum = (int) Math.ceil(currentProcess.getQuantum() * 0.4);
             if (nonPreemptiveQuantum > currentProcess.getRemainingTime()) {
                 //Edge testcase when the 40% of the Quantum > the remaining burst time (when the process is almost done)
                 nonPreemptiveQuantum = currentProcess.getRemainingTime();
             }
+
             currentProcess.setRemainingTime(currentProcess.getRemainingTime() - nonPreemptiveQuantum);
             time += nonPreemptiveQuantum;
             executedTime += nonPreemptiveQuantum;
@@ -88,7 +91,7 @@ public class FcaiFactorSchedulingAlgorithm implements SchedulingAlgorithm {
             currentProcess.setFcaiFactor(fcaiFactor);
 
 
-            //I have added the less than or equal instead of (==) to not miss the 1 second
+            //I have added the (less than or equal) instead of (==) to not miss the 1 second
             while (currentProcess.getFcaiFactor() <= getMinimumFcaiFactor(currentProcess) && executedTime < currentProcess.getQuantum()
                     && currentProcess.hasRemainingTime()
             ) {
@@ -96,16 +99,9 @@ public class FcaiFactorSchedulingAlgorithm implements SchedulingAlgorithm {
                     break;//To handle the interrupt after the loop
 
                 time++;
-                //To check whether a new process arrived or not. If so break because it is an interrupt
-                for (int j = 0; j < processes.size(); j++) {
-                    Process p = processes.get(j);
-                    if (p.getArrivalTime() <= time && !p.isAddedToQueue) {
-                        readyQueue.add(p);
-                        p.isAddedToQueue = true;
-                        p.addQuantumToHistory(p.getQuantum());
-                        break;
-                    }
-                }
+
+                //To check whether a new process arrived or not.
+                checkNewProcesses(time);
                 executedTime++;
                 currentProcess.setRemainingTime(currentProcess.getRemainingTime() - 1);
                 fcaiFactor = calculateFcaiFactor(currentProcess, lastArrivalTime, maxBurstTime);
@@ -134,10 +130,10 @@ public class FcaiFactorSchedulingAlgorithm implements SchedulingAlgorithm {
                     executedTime += initialQuantum;
                     currentProcess.setRemainingTime(0);
                     completedProcesses.add(currentProcess);
-                } else if (currentProcess.getQuantum() == executedTime) {
+                } else if (currentProcess.getQuantum() == executedTime) { //If the process is exhausted(run out of quantum)
                     updateQuantum(currentProcess, false, 0);
                 } else {
-                    int unusedQuantum = currentProcess.getQuantum() - executedTime;
+                    int unusedQuantum = currentProcess.getQuantum() - executedTime;//If the process is preempted by a smaller fcaiFactor
                     updateQuantum(currentProcess, true, unusedQuantum);
                     int minIndex = getMinimumFcaiFactorINDEX();
                     Process temp = readyQueue.get(minIndex);
@@ -163,13 +159,20 @@ public class FcaiFactorSchedulingAlgorithm implements SchedulingAlgorithm {
     }
 
     private void checkNewProcesses(int time) {
+        int noOfAddedProcesses=0;
         for (int j = 0; j < processes.size(); j++) {
             Process p = processes.get(j);
             if (p.getArrivalTime() <= time && !p.isAddedToQueue) {
                 readyQueue.add(p);
                 p.isAddedToQueue = true;
                 p.addQuantumToHistory(p.getQuantum());
+                noOfAddedProcesses++;
             }
+        }
+        if(noOfAddedProcesses>1){
+            Process temp = readyQueue.get(getMinimumFcaiFactorINDEX());
+            readyQueue.remove(getMinimumFcaiFactorINDEX());
+            readyQueue.addFirst(temp);
         }
     }
 
@@ -240,4 +243,3 @@ public class FcaiFactorSchedulingAlgorithm implements SchedulingAlgorithm {
         return (double) totalTurnAroundTime / processes.size();
     }
 }
-//

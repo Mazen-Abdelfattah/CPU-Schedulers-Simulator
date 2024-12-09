@@ -10,14 +10,12 @@ public class Main {
         int contextSwitchTime = 1;
         int maxTime = 0;
 
-    /*    System.out.println("Enter the number of processes :");
+        System.out.println("Enter the number of processes :");
         int n = sc.nextInt();
-        System.out.println("Enter Round Robin Time Quantum :");
-        int quantum = sc.nextInt();
         System.out.println("Enter the context switch time :");
         contextSwitchTime = sc.nextInt();
 
-        for (int i = 0; i < n; i++) {
+     /*   for (int i = 0; i < n; i++) {
             System.out.println("Enter the name of the process :");
             String name = sc.next();
             System.out.println("Enter the color of the process :");
@@ -29,18 +27,21 @@ public class Main {
             int burstTime = sc.nextInt();
             System.out.println("Enter the priority of the process :");
             int priority = sc.nextInt();
-            processes.add(new Process(name, color, arrivalTime, burstTime, priority));
+            System.out.println("Enter Round Robin Time Quantum :");
+            int quantum = sc.nextInt();
+            processes.add(new Process(name, color, arrivalTime, burstTime, priority, quantum));
         }*/
 
-
-        Process process1 = new Process("P1", "RED", 0, 17, 4, 4);
-        processes.add(process1);
-        Process process2 = new Process("P2", "GREEN", 3, 6, 9, 3);
-        processes.add(process2);
-        Process process3 = new Process("P3", "BLUE", 4, 10, 3, 5);
-        processes.add(process3);
-        Process process4 = new Process("P4", "BLACK", 29, 4, 10, 2);
-        processes.add(process4);
+//============================================================================
+//        Process process1 = new Process("P1", "RED", 0, 17, 4, 4);
+//        processes.add(process1);
+//        Process process2 = new Process("P2", "GREEN", 3, 6, 9, 3);
+//        processes.add(process2);
+//        Process process3 = new Process("P3", "BLUE", 4, 10, 3, 5);
+//        processes.add(process3);
+//        Process process4 = new Process("P4", "BLACK", 29, 4, 10, 2);
+//        processes.add(process4);
+//============================================================================
 //        Process process1 = new Process("P1", "RED", 0, 99, 4, 4);
 //        processes.add(process1);
 //        Process process2 = new Process("P2", "GREEN", 0, 60, 9, 3);
@@ -49,6 +50,19 @@ public class Main {
 //        processes.add(process3);
 //        Process process4 = new Process("P4", "BLACK", 29, 4, 10, 2);
 //        processes.add(process4);
+// ============================================================================
+
+//        Process process1 = new Process("P1", "RED", 0, 10, 4, 4);
+//        processes.add(process1);
+//        Process process2 = new Process("P2", "GREEN", 0, 6, 9, 3);
+//        processes.add(process2);
+//        Process process3 = new Process("P3", "BLUE", 0, 5, 3, 5);
+//        processes.add(process3);
+//        Process process4 = new Process("P4", "BLACK", 4, 2, 10, 2);
+//        processes.add(process4);
+// ============================================================================
+
+
 
         FcaiFactorSchedulingAlgorithm fcaiScheduler = new FcaiFactorSchedulingAlgorithm(processes);
         System.out.println(">>>>>>>>>>>>FCAI Factor Scheduling Algorithm<<<<<<<<<<<<<<");
