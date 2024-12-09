@@ -10,7 +10,7 @@ public class Main {
         int contextSwitchTime = 1;
         int maxTime = 0;
 
-        System.out.println("Enter the number of processes :");
+    /*    System.out.println("Enter the number of processes :");
         int n = sc.nextInt();
         System.out.println("Enter Round Robin Time Quantum :");
         int quantum = sc.nextInt();
@@ -30,7 +30,35 @@ public class Main {
             System.out.println("Enter the priority of the process :");
             int priority = sc.nextInt();
             processes.add(new Process(name, color, arrivalTime, burstTime, priority));
-        }
+        }*/
+
+
+        Process process1 = new Process("P1", "RED", 0, 17, 4, 4);
+        processes.add(process1);
+        Process process2 = new Process("P2", "GREEN", 3, 6, 9, 3);
+        processes.add(process2);
+        Process process3 = new Process("P3", "BLUE", 4, 10, 3, 5);
+        processes.add(process3);
+        Process process4 = new Process("P4", "BLACK", 29, 4, 10, 2);
+        processes.add(process4);
+//        Process process1 = new Process("P1", "RED", 0, 99, 4, 4);
+//        processes.add(process1);
+//        Process process2 = new Process("P2", "GREEN", 0, 60, 9, 3);
+//        processes.add(process2);
+//        Process process3 = new Process("P3", "BLUE", 4, 10, 3, 5);
+//        processes.add(process3);
+//        Process process4 = new Process("P4", "BLACK", 29, 4, 10, 2);
+//        processes.add(process4);
+
+        FcaiFactorSchedulingAlgorithm fcaiScheduler = new FcaiFactorSchedulingAlgorithm(processes);
+        System.out.println(">>>>>>>>>>>>FCAI Factor Scheduling Algorithm<<<<<<<<<<<<<<");
+        fcaiScheduler.getExecutionOrder();
+        fcaiScheduler.getWaitingTime();
+        fcaiScheduler.getTurnAroundTime();
+        System.out.println("Average Waiting Time : " + fcaiScheduler.getAverageWaitingTime() + " ms");
+        System.out.println("Average Turn Around Time : " + fcaiScheduler.getAverageTurnAroundTime() + " ms");
+        fcaiScheduler.printQuantumHistory();
+        System.out.println("\n_________________________________________________________________\n");
 
         SchedulingAlgorithm sjf = new ShortestJobFirst(processes, contextSwitchTime);
         System.out.println("Shortest Job First Scheduling Algorithm");

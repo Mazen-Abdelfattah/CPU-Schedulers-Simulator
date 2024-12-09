@@ -1,5 +1,5 @@
-
-
+import java.util.ArrayList;
+import java.util.List;
 
 public class Process implements Comparable<Process>{
     private String name;
@@ -10,14 +10,23 @@ public class Process implements Comparable<Process>{
     private int id;
     private int age = 0;
     private int remainingTime ;
+    private int quantum;  // Track the quantum assigned to the process
+    private int completionTime;
+    private int turnaroundTime;
+    private int waitingTime;
+    private int fcaiFactor;
+    boolean isAddedToQueue = false;
 
-    public Process(String name, String color, int arrivalTime, int burstTime, int priority) {
+    private List<Integer> quantumHistory = new ArrayList<>();  // Track quantum history
+
+    public Process(String name, String color, int arrivalTime, int burstTime, int priority, int quantum) {
         this.name = name;
         this.color = color;
         this.arrivalTime = arrivalTime;
         this.burstTime = burstTime;
         this.priority = priority;
         this.remainingTime = burstTime;
+        this.quantum = quantum;
     }
 
     public Process(Process other) { // Copy constructor
@@ -88,4 +97,62 @@ public class Process implements Comparable<Process>{
         // If remaining time is the same, break the tie by arrival time
         return Integer.compare(this.arrivalTime, other.arrivalTime);
     }
+
+    public int getQuantum() {
+        return quantum;
+    }
+
+    public void setQuantum(int quantum) {
+        this.quantum = quantum;
+    }
+
+    public int getCompletionTime() {
+        return completionTime;
+    }
+
+    public void setCompletionTime(int completionTime) {
+        this.completionTime = completionTime;
+    }
+
+    public int getTurnaroundTime() {
+        return turnaroundTime;
+    }
+
+    public void setTurnaroundTime(int turnaroundTime) {
+        this.turnaroundTime = turnaroundTime;
+    }
+
+    public int getWaitingTime() {
+        return waitingTime;
+    }
+
+    public void setWaitingTime(int waitingTime) {
+        this.waitingTime = waitingTime;
+    }
+
+    public int getFcaiFactor() {
+        return fcaiFactor;
+    }
+
+    public void setFcaiFactor(int fcaiFactor) {
+        this.fcaiFactor = fcaiFactor;
+    }
+
+    public List<Integer> getQuantumHistory() {
+        return quantumHistory;
+    }
+
+    public void setQuantumHistory(List<Integer> quantumHistory) {
+        this.quantumHistory = quantumHistory;
+    }
+
+    public boolean hasRemainingTime() {
+        return getRemainingTime() > 0;
+    }
+
+
+    public void addQuantumToHistory(int quantum) {
+        this.quantumHistory.add(quantum);
+    }
+
 }

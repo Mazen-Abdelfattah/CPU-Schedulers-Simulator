@@ -37,7 +37,7 @@ public class FcaiFactorSchedulingAlgorithm implements SchedulingAlgorithm {
     public int calculateFcaiFactor(Process p, int lastArrivalTime, int maxBurstTime) {
         double V1 = lastArrivalTime / 10.0;
         double V2 = maxBurstTime / 10.0;
-        return (int) Math.ceil((10 - p.getPriority()) + Math.ceil(p.getArrivalTime() / V1) + Math.ceil(p.getRemainingBurstTime() / V2));
+        return (int) Math.ceil((10 - p.getPriority()) + Math.ceil(p.getArrivalTime() / V1) + Math.ceil(p.getRemainingTime() / V2));
     }
 
     // Update quantum based on whether the process was preempted
@@ -75,11 +75,11 @@ public class FcaiFactorSchedulingAlgorithm implements SchedulingAlgorithm {
             int startTime = time;
             int initialQuantum = currentProcess.getQuantum();
             int nonPreemptiveQuantum = (int) Math.ceil(currentProcess.getQuantum() * 0.4);
-            if (nonPreemptiveQuantum > currentProcess.getRemainingBurstTime()) {
+            if (nonPreemptiveQuantum > currentProcess.getRemainingTime()) {
                 //Edge testcase when the 40% of the Quantum > the remaining burst time (when the process is almost done)
-                nonPreemptiveQuantum = currentProcess.getRemainingBurstTime();
+                nonPreemptiveQuantum = currentProcess.getRemainingTime();
             }
-            currentProcess.setRemainingBurstTime(currentProcess.getRemainingBurstTime() - nonPreemptiveQuantum);
+            currentProcess.setRemainingTime(currentProcess.getRemainingTime() - nonPreemptiveQuantum);
             time += nonPreemptiveQuantum;
             executedTime += nonPreemptiveQuantum;
 
@@ -90,7 +90,7 @@ public class FcaiFactorSchedulingAlgorithm implements SchedulingAlgorithm {
 
             //I have added the less than or equal instead of (==) to not miss the 1 second
             while (currentProcess.getFcaiFactor() <= getMinimumFcaiFactor(currentProcess) && executedTime < currentProcess.getQuantum()
-                    && currentProcess.hasRemainingBurstTime()
+                    && currentProcess.hasRemainingTime()
             ) {
                 if (currentProcess.getFcaiFactor() == getMinimumFcaiFactor(currentProcess) && !readyQueue.isEmpty())
                     break;//To handle the interrupt after the loop
@@ -107,7 +107,7 @@ public class FcaiFactorSchedulingAlgorithm implements SchedulingAlgorithm {
                     }
                 }
                 executedTime++;
-                currentProcess.setRemainingBurstTime(currentProcess.getRemainingBurstTime() - 1);
+                currentProcess.setRemainingTime(currentProcess.getRemainingTime() - 1);
                 fcaiFactor = calculateFcaiFactor(currentProcess, lastArrivalTime, maxBurstTime);
                 currentProcess.setFcaiFactor(fcaiFactor);
 
@@ -115,13 +115,13 @@ public class FcaiFactorSchedulingAlgorithm implements SchedulingAlgorithm {
 
 
             // If the process has finished execution, set its completion time
-            if (!currentProcess.hasRemainingBurstTime()) {
+            if (!currentProcess.hasRemainingTime()) {
                 currentProcess.setCompletionTime(time);
                 completedProcesses.add(currentProcess);
             }
 
             // If there is still burst time left, the process will be re-added to the queue
-            if (currentProcess.hasRemainingBurstTime()) {
+            if (currentProcess.hasRemainingTime()) {
                 if (flagForFirstProcess) {
                     checkNewProcesses(time);
                     flagForFirstProcess = false;
@@ -132,7 +132,7 @@ public class FcaiFactorSchedulingAlgorithm implements SchedulingAlgorithm {
                     currentProcess.setCompletionTime(time);
                     currentProcess.setQuantum(initialQuantum);
                     executedTime += initialQuantum;
-                    currentProcess.setRemainingBurstTime(0);
+                    currentProcess.setRemainingTime(0);
                     completedProcesses.add(currentProcess);
                 } else if (currentProcess.getQuantum() == executedTime) {
                     updateQuantum(currentProcess, false, 0);
@@ -150,7 +150,7 @@ public class FcaiFactorSchedulingAlgorithm implements SchedulingAlgorithm {
             // Print each process' execution info in a structured manner
             System.out.printf("%-10s%-10s%-15d%-20d", //s/d-> the no. of chars that it will leave, %-> the beginning of a format specifier
                     startTime + "-" + time, currentProcess.getName(),
-                    executedTime, currentProcess.getRemainingBurstTime());
+                    executedTime, currentProcess.getRemainingTime());
 
             if (initialQuantum == finalQuantum) {
                 System.out.printf("%-20s", "Completed");
