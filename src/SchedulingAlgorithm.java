@@ -6,3 +6,4 @@ public interface SchedulingAlgorithm {
     public  double getAverageTurnAroundTime();
 
 }
+//

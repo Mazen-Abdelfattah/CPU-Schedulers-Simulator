@@ -87,3 +87,5 @@ public class ShortestJobFirst implements SchedulingAlgorithm {
         return (double) totalTurnAroundTime / processes.size();
     }
 }
+
+//
