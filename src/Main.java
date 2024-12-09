@@ -15,7 +15,7 @@ public class Main {
         System.out.println("Enter the context switch time :");
         contextSwitchTime = sc.nextInt();
 
-     /*   for (int i = 0; i < n; i++) {
+        for (int i = 0; i < n; i++) {
             System.out.println("Enter the name of the process :");
             String name = sc.next();
             System.out.println("Enter the color of the process :");
@@ -30,7 +30,7 @@ public class Main {
             System.out.println("Enter Round Robin Time Quantum :");
             int quantum = sc.nextInt();
             processes.add(new Process(name, color, arrivalTime, burstTime, priority, quantum));
-        }*/
+        }
 
 //============================================================================
 //        Process process1 = new Process("P1", "RED", 0, 17, 4, 4);

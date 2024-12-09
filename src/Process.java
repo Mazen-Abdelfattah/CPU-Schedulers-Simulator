@@ -10,6 +10,8 @@ public class Process implements Comparable<Process>{
     private int id;
     private int age = 0;
     private int remainingTime ;
+
+    private int srtf_remaining ;
     private int quantum;  // Track the quantum assigned to the process
     private int completionTime;
     private int turnaroundTime;
@@ -26,6 +28,7 @@ public class Process implements Comparable<Process>{
         this.burstTime = burstTime;
         this.priority = priority;
         this.remainingTime = burstTime;
+        this.srtf_remaining = burstTime;
         this.quantum = quantum;
     }
 
@@ -36,6 +39,7 @@ public class Process implements Comparable<Process>{
         this.burstTime = other.burstTime;
         this.priority = other.priority;
         this.remainingTime = other.remainingTime;
+        this.srtf_remaining = other.srtf_remaining;
     }
 
     public int getPriority() {
@@ -84,6 +88,9 @@ public class Process implements Comparable<Process>{
 
     public void setRemainingTime(int time){remainingTime=time;}
 
+    public void setSrtf_remaining(int time){srtf_remaining=time;}
+
+    public int getSrtf_remaining(){return srtf_remaining;}
     public int getRemainingTime(){return remainingTime;}
 
     @Override

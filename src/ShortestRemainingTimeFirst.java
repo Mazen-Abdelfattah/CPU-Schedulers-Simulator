@@ -9,8 +9,8 @@ public class ShortestRemainingTimeFirst implements SchedulingAlgorithm{
     private int time ;
 
     PriorityQueue<Process> readyQueue = new PriorityQueue<>((p1, p2) -> {
-        int effectiveTimeThis = p1.getRemainingTime() - p1.getAge();
-        int effectiveTimeOther = p2.getRemainingTime() - p2.getAge();
+        int effectiveTimeThis = p1.getSrtf_remaining() - p1.getAge();
+        int effectiveTimeOther = p2.getSrtf_remaining() - p2.getAge();
 
         if (effectiveTimeThis != effectiveTimeOther) {
             return Integer.compare(effectiveTimeThis, effectiveTimeOther);
@@ -36,7 +36,7 @@ public class ShortestRemainingTimeFirst implements SchedulingAlgorithm{
         while (completedProcesses < n) {
             // Add processes that have arrived by the current time
             for (Process process : processes) {
-                if (process.getArrivalTime() <= time && process.getRemainingTime() > 0 && !readyQueue.contains(process)) {
+                if (process.getArrivalTime() <= time && process.getSrtf_remaining() > 0 && !readyQueue.contains(process)) {
                     readyQueue.add(process);
                     waitingTime.put(process,0);
                     counter++;
@@ -51,17 +51,17 @@ public class ShortestRemainingTimeFirst implements SchedulingAlgorithm{
 
                 // Find the next arrival time for a process not yet in the queue
                 for (Process process : processes) {
-                    if (!readyQueue.contains(process) && process.getArrivalTime() > time && process.getRemainingTime() > 0) {
+                    if (!readyQueue.contains(process) && process.getArrivalTime() > time && process.getSrtf_remaining() > 0) {
                         nextArrivalTime = Math.min(nextArrivalTime, process.getArrivalTime());
                     }
                 }
 
                 // Calculate the time to run the current process
-                int timeToRun = Math.min(current.getRemainingTime(), nextArrivalTime - time);
+                int timeToRun = Math.min(current.getSrtf_remaining(), nextArrivalTime - time);
 
                 // Simulate running the process
                 System.out.println(current.getName() + " executed from time " + time + " to " + (time + timeToRun));
-                current.setRemainingTime(current.getRemainingTime()-timeToRun);
+                current.setSrtf_remaining(current.getSrtf_remaining()-timeToRun);
                 time += timeToRun;
 //                System.out.println("current time: "+time+"\n");
 //                for(Process p : processes)
@@ -74,7 +74,7 @@ public class ShortestRemainingTimeFirst implements SchedulingAlgorithm{
                 }
 
                 // If the process is complete, update metrics
-                if (current.getRemainingTime() == 0) {
+                if (current.getSrtf_remaining() == 0) {
                     completionTime.put(current, time);
                     waitingTime.put(current, time - current.getBurstTime() - current.getArrivalTime());
                     totalWaitingTime += waitingTime.get(current);
@@ -90,7 +90,7 @@ public class ShortestRemainingTimeFirst implements SchedulingAlgorithm{
             } else {
                 // If no process is ready, jump to the next arrival time
                 int nextArrivalTime = processes.stream()
-                        .filter(p -> p.getArrivalTime() > time && p.getRemainingTime() > 0)
+                        .filter(p -> p.getArrivalTime() > time && p.getSrtf_remaining() > 0)
                         .mapToInt(Process::getArrivalTime)
                         .min()
                         .orElse(time + 1); // If no future arrivals, increment by 1
