@@ -1,12 +1,9 @@
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 public class PrioritySchedulingAlgorithm implements SchedulingAlgorithm {
-    private List<Process> processes;
-    private int contextSwitchTime;
-    private List<Process> executionOrder;
+    private final List<Process> processes;
+    private final int contextSwitchTime;
+    private final List<Process> executionOrder;
     private int totalWaitingTime;
     private int totalTurnAroundTime;
 
@@ -20,47 +17,38 @@ public class PrioritySchedulingAlgorithm implements SchedulingAlgorithm {
 
     @Override
     public void getExecutionOrder() {
-        // Sort processes based on priority (lower priority number means higher priority)
-        processes.sort(Comparator.comparingInt(Process::getPriority)
-                .thenComparingInt(Process::getArrivalTime));
-
         int currentTime = 0;
         List<Process> readyQueue = new ArrayList<>();
 
         while (!processes.isEmpty() || !readyQueue.isEmpty()) {
-            // Add all processes that have arrived by current time to the ready queue
-            for (Process p : processes) {
+            for (Iterator<Process> it = processes.iterator(); it.hasNext(); ) {
+                Process p = it.next();
                 if (p.getArrivalTime() <= currentTime) {
                     readyQueue.add(p);
+                    it.remove();
                 }
             }
-
-            // Remove the processes that have been added to the ready queue from the original list
             int finalCurrentTime = currentTime;
             processes.removeIf(p -> p.getArrivalTime() <= finalCurrentTime);
 
-            // Sort the ready queue by priority and arrival time
             readyQueue.sort(Comparator.comparingInt(Process::getPriority)
                     .thenComparingInt(Process::getArrivalTime));
 
             if (!readyQueue.isEmpty()) {
-                Process currentProcess = readyQueue.get(0);
-                readyQueue.remove(0);
-
-                // Add the process to the execution order and calculate times
-                executionOrder.add(currentProcess);
-                currentTime += currentProcess.getBurstTime();
-                totalTurnAroundTime += currentTime - currentProcess.getArrivalTime();
-                totalWaitingTime += (currentTime - currentProcess.getArrivalTime()) - currentProcess.getBurstTime();
-
-                // Include context switching time if there is a next process
-                if (!readyQueue.isEmpty()) {
+                Process currentProcess = readyQueue.removeFirst();
+                if (!executionOrder.isEmpty())
                     currentTime += contextSwitchTime;
-                }
+                int startTime = currentTime;
+                int endTime = startTime + currentProcess.getBurstTime();
+//                totalTurnAroundTime += currentTime + currentProcess.getBurstTime() + contextSwitchTime - currentProcess.getArrivalTime();
+                totalTurnAroundTime += endTime - currentProcess.getArrivalTime();
+//                totalWaitingTime += (currentTime - currentProcess.getArrivalTime()) - currentProcess.getBurstTime();
+                totalWaitingTime += startTime - currentProcess.getArrivalTime();
+                currentTime = endTime;
+                executionOrder.add(currentProcess);
             } else {
-                // If no process is ready, increment time to the arrival time of the next process
                 if (!processes.isEmpty()) {
-                    currentTime = processes.get(0).getArrivalTime();
+                    currentTime = processes.getFirst().getArrivalTime();
                 }
             }
         }
@@ -94,7 +82,6 @@ public class PrioritySchedulingAlgorithm implements SchedulingAlgorithm {
         return (double) totalTurnAroundTime / executionOrder.size();
     }
 
-    // Method to print the execution order
     public void printExecutionOrder() {
         System.out.println("Execution order of processes:");
         for (Process p : executionOrder) {
@@ -102,4 +89,3 @@ public class PrioritySchedulingAlgorithm implements SchedulingAlgorithm {
         }
     }
 }
-//
