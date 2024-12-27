@@ -8,7 +8,6 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         List<Process> processes  = new ArrayList<>();
         int contextSwitchTime = 1;
-        int maxTime = 0;
 
 //        System.out.println("Enter the number of processes :");
 //        int n = sc.nextInt();

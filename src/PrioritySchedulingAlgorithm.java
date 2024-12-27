@@ -28,8 +28,6 @@ public class PrioritySchedulingAlgorithm implements SchedulingAlgorithm {
                     it.remove();
                 }
             }
-            int finalCurrentTime = currentTime;
-            processes.removeIf(p -> p.getArrivalTime() <= finalCurrentTime);
 
             readyQueue.sort(Comparator.comparingInt(Process::getPriority)
                     .thenComparingInt(Process::getArrivalTime));
@@ -38,11 +36,8 @@ public class PrioritySchedulingAlgorithm implements SchedulingAlgorithm {
                 Process currentProcess = readyQueue.removeFirst();
                 if (!executionOrder.isEmpty())
                     currentTime += contextSwitchTime;
-                int startTime = currentTime;
-                int endTime = startTime + currentProcess.getBurstTime();
-//                totalTurnAroundTime += currentTime + currentProcess.getBurstTime() + contextSwitchTime - currentProcess.getArrivalTime();
+                int startTime = currentTime, endTime = startTime + currentProcess.getBurstTime();
                 totalTurnAroundTime += endTime - currentProcess.getArrivalTime();
-//                totalWaitingTime += (currentTime - currentProcess.getArrivalTime()) - currentProcess.getBurstTime();
                 totalWaitingTime += startTime - currentProcess.getArrivalTime();
                 currentTime = endTime;
                 executionOrder.add(currentProcess);
