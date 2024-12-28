@@ -2,7 +2,7 @@ import java.util.*;
 
 public class PrioritySchedulingAlgorithm implements SchedulingAlgorithm {
     private final List<Process> processes;
-    private final int contextSwitchTime;
+    private final int contextSwitchTime;  // Time taken to switch from one process to another.
     private final List<Process> executionOrder;
     private int totalWaitingTime;
     private int totalTurnAroundTime;
@@ -23,6 +23,7 @@ public class PrioritySchedulingAlgorithm implements SchedulingAlgorithm {
         while (!processes.isEmpty() || !readyQueue.isEmpty()) {
             for (Iterator<Process> it = processes.iterator(); it.hasNext(); ) {
                 Process p = it.next();
+                // it's arrived.
                 if (p.getArrivalTime() <= currentTime) {
                     readyQueue.add(p);
                     it.remove();
@@ -37,11 +38,14 @@ public class PrioritySchedulingAlgorithm implements SchedulingAlgorithm {
                 if (!executionOrder.isEmpty())
                     currentTime += contextSwitchTime;
                 int startTime = currentTime, endTime = startTime + currentProcess.getBurstTime();
-                totalTurnAroundTime += endTime - currentProcess.getArrivalTime();
-                totalWaitingTime += startTime - currentProcess.getArrivalTime();
+                int turnaroundTime = endTime - currentProcess.getArrivalTime(), waitingTime = startTime - currentProcess.getArrivalTime();
+                currentProcess.setWaitingTime(waitingTime);  // Time spent waiting in the ready queue before execution.
+                totalWaitingTime += waitingTime;
+                currentProcess.setTurnaroundTime(turnaroundTime);  // Time from process arrival to completion.
+                totalTurnAroundTime += turnaroundTime;
                 currentTime = endTime;
                 executionOrder.add(currentProcess);
-            } else {
+            } else {  // idle time, CPU's free.
                 if (!processes.isEmpty()) {
                     currentTime = processes.getFirst().getArrivalTime();
                 }
@@ -53,8 +57,7 @@ public class PrioritySchedulingAlgorithm implements SchedulingAlgorithm {
     public void getWaitingTime() {
         System.out.println("Processes waiting time:");
         for (Process p : executionOrder) {
-            int waitingTime = (totalWaitingTime - p.getBurstTime());
-            System.out.println("Process " + p.getName() + " waiting time: " + waitingTime + " ms");
+            System.out.println("Process " + p.getName() + " waiting time: " + p.getWaitingTime() + " ms");
         }
     }
 
@@ -62,8 +65,7 @@ public class PrioritySchedulingAlgorithm implements SchedulingAlgorithm {
     public void getTurnAroundTime() {
         System.out.println("Processes turnaround time:");
         for (Process p : executionOrder) {
-            int turnAroundTime = (totalTurnAroundTime - p.getArrivalTime());
-            System.out.println("Process " + p.getName() + " turnaround time: " + turnAroundTime + " ms");
+            System.out.println("Process " + p.getName() + " turnaround time: " + p.getTurnaroundTime() + " ms");
         }
     }
 

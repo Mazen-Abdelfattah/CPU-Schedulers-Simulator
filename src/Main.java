@@ -40,6 +40,8 @@ public class Main {
         processes.add(process3);
         Process process4 = new Process("P4", "BLACK", 29, 4, 10, 2);
         processes.add(process4);
+
+
 //============================================================================
 //        Process process1 = new Process("P1", "RED", 0, 99, 4, 4);
 //        processes.add(process1);
